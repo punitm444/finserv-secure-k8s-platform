@@ -1,4 +1,3 @@
-@'
 from fastapi import FastAPI
 from datetime import datetime, timezone
 
@@ -22,4 +21,3 @@ def health():
         "service": "account-service",
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
-'@ | Set-Content -Encoding UTF8 "services\account-service\app.py"

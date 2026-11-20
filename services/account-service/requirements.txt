@@ -1,4 +1,2 @@
-@'
 fastapi
 uvicorn[standard]
-'@ | Set-Content -Encoding UTF8 "services\account-service\requirements.txt"
