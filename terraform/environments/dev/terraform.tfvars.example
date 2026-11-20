@@ -1,0 +1,12 @@
+aws_region        = "ap-south-1"
+aws_profile       = "dev"
+availability_zone = "ap-south-1a"
+
+vpc_cidr          = "10.0.0.0/16"
+public_subnet_cidr = "10.0.1.0/24"
+private_subnet_cidr = "10.0.2.0/24"
+
+admin_cidrs = [
+  "YOUR_FIRST_PUBLIC_IP/32",
+  "YOUR_SECOND_PUBLIC_IP/32"
+]
