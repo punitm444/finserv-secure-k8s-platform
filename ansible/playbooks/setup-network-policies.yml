@@ -1,0 +1,25 @@
+---
+- name: Configure FinServ network isolation
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  environment:
+    KUBECONFIG: /home/ubuntu/.kube/config
+
+  tasks:
+    - name: Apply default-deny and DNS NetworkPolicies
+      ansible.builtin.command:
+        cmd: kubectl apply -f kubernetes/network-policies/default-deny.yaml
+      args:
+        chdir: /home/ubuntu/finserv-ansible
+
+    - name: List NetworkPolicies
+      ansible.builtin.command:
+        cmd: kubectl get networkpolicies -A
+      register: policy_result
+      changed_when: false
+
+    - name: Display NetworkPolicies
+      ansible.builtin.debug:
+        var: policy_result.stdout_lines

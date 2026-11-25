@@ -1,0 +1,25 @@
+---
+- name: Configure FinServ Kubernetes namespaces
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  environment:
+    KUBECONFIG: /home/ubuntu/.kube/config
+
+  tasks:
+    - name: Apply FinServ namespace definitions
+      ansible.builtin.command:
+        cmd: kubectl apply -f kubernetes/namespaces/namespaces.yaml
+      args:
+        chdir: /home/ubuntu/finserv-ansible
+
+    - name: Verify Kubernetes namespaces
+      ansible.builtin.command:
+        cmd: kubectl get namespaces
+      register: namespace_result
+      changed_when: false
+
+    - name: Display namespace list
+      ansible.builtin.debug:
+        var: namespace_result.stdout_lines

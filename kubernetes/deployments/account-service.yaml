@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-service
+  namespace: finserv-accounts
+  labels:
+    app: account-service
+    app.kubernetes.io/part-of: finserv-digital
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: account-service
+  template:
+    metadata:
+      labels:
+        app: account-service
+        app.kubernetes.io/part-of: finserv-digital
+    spec:
+      serviceAccountName: account-service
+      imagePullSecrets:
+        - name: ecr-registry-secret
+      containers:
+        - name: account-service
+          image: 393060838514.dkr.ecr.ap-south-1.amazonaws.com/finserv-microservices:account-service-3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20

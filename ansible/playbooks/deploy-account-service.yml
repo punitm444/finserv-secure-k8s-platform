@@ -1,0 +1,29 @@
+---
+- name: Deploy FinServ Account Service
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    project_dir: /home/ubuntu/finserv-ansible
+
+  tasks:
+    - name: Apply Account Service Deployment
+      command: kubectl apply -f kubernetes/deployments/account-service.yaml
+      args:
+        chdir: "{{ project_dir }}"
+
+    - name: Apply Account Service Service
+      command: kubectl apply -f kubernetes/deployments/account-service-service.yaml
+      args:
+        chdir: "{{ project_dir }}"
+
+    - name: Apply Account Service HPA
+      command: kubectl apply -f kubernetes/deployments/account-service-hpa.yaml
+      args:
+        chdir: "{{ project_dir }}"
+
+    - name: Wait for Account Service rollout
+      command: kubectl rollout status deployment/account-service -n finserv-accounts
+      args:
+        chdir: "{{ project_dir }}"

@@ -1,0 +1,25 @@
+---
+- name: Configure FinServ namespace RBAC
+  hosts: local
+  connection: local
+  gather_facts: false
+
+  environment:
+    KUBECONFIG: /home/ubuntu/.kube/config
+
+  tasks:
+    - name: Apply developer RBAC configuration
+      ansible.builtin.command:
+        cmd: kubectl apply -f kubernetes/rbac/developer-rbac.yaml
+      args:
+        chdir: /home/ubuntu/finserv-ansible
+
+    - name: Display developer role bindings
+      ansible.builtin.command:
+        cmd: kubectl get rolebindings -A
+      register: rbac_result
+      changed_when: false
+
+    - name: Show role bindings
+      ansible.builtin.debug:
+        var: rbac_result.stdout_lines
